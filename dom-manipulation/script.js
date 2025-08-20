@@ -88,6 +88,33 @@ document.addEventListener("DOMContentLoaded", ()=>{
 })
 
 
+// --- Existing code (keep everything you already have) ---
+
+// Function to export quotes as JSON file
+function exportQuotes() {
+    // Convert array to pretty JSON string
+    const dataStr = JSON.stringify(quotes, null, 2);
+
+    // Create a Blob with the JSON data
+    const blob = new Blob([dataStr], { type: "application/json" });
+
+    // Create a temporary download link
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "quotes.json"; // filename
+
+    // Trigger the download
+    link.click();
+
+    // Clean up the URL object
+    URL.revokeObjectURL(url);
+    console.log(url)
+}
+
+
+
+
 function importFromJsonFile(event) {
     const fileReader = new FileReader();
     fileReader.onload = function(event) {
