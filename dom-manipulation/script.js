@@ -34,7 +34,7 @@ function showRandomQuotes (){
 const randomBtn = document.getElementById("newQuote")
 randomBtn.addEventListener("click", showRandomQuotes)
 
-
+createAddQuoteForm()
 
 
 function addQuote(){
