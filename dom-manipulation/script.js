@@ -1,4 +1,4 @@
-let quotes =[
+let quotes = JSON.parse(localStorage.getItem("quotes")) || [
     {text: 'walk the earth with an aura that matches none.', category:'Motivation'},
     {text: 'Dont let yesterday crimes define your today ', category: 'Inspiration'},
     {text:"it's not how you fall that matters, it's how how you get back up!", category:'Perseverance'}
@@ -34,7 +34,7 @@ function showRandomQuotes (){
 const randomBtn = document.getElementById("newQuote")
 randomBtn.addEventListener("click", showRandomQuotes)
 
-createAddQuoteForm()
+// createAddQuoteForm()
 
 
 function addQuote(){
@@ -55,6 +55,9 @@ function addQuote(){
 
     quotes.push(newQuotes)
 
+
+    localStorage.setItem("quotes", JSON.stringify(quotes))
+
     const container = document.getElementById("quoteDisplay");
     container.innerHTML= "";
 
@@ -73,6 +76,25 @@ function addQuote(){
     newTextInput.value = "";
     newCategoryInput.value = "";
 
+    newTextInput.focus()
+
 
 
 }
+document.addEventListener("DOMContentLoaded", ()=>{
+    if (quotes.length > 0){
+        showRandomQuotes();
+    }
+})
+
+
+function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(event) {
+      const importedQuotes = JSON.parse(event.target.result);
+      quotes.push(...importedQuotes);
+      saveQuotes();
+      alert('Quotes imported successfully!');
+    };
+    fileReader.readAsText(event.target.files[0]);
+  }
