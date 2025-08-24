@@ -169,7 +169,7 @@ async function syncToServer() {
       body: JSON.stringify({ quotes }),
       headers: { "Content-Type": "application/json" }
     });
-    console.log("✅ Local quotes synced to server");
+    console.log("Quotes synced with server!");
   } catch (error) {
     console.error("❌ Sync to server failed:", error);
   }
