@@ -79,6 +79,9 @@ function addQuote() {
   newTextInput.value = "";
   newCategoryInput.value = "";
   newTextInput.focus();
+
+  // Push to server simulation
+  syncToServer();
 }
 
 // ✅ Populate category dropdown dynamically
@@ -111,7 +114,17 @@ function filterQuotes() {
 document.addEventListener("DOMContentLoaded", () => {
   populateCategories();
   showRandomQuotes();
+  fetchFromServer(); // sync initial data
+  setInterval(fetchFromServer, 10000); // sync every 10s
 });
+
+// ✅ Add quote with Enter key
+document.getElementById("newQuoteCategory").addEventListener("keydown", function(e){
+  if (e.key ==="Enter"){
+    e.preventDefault();
+    addQuote();
+  }
+})
 
 // ✅ Export quotes as JSON
 function exportQuotes() {
@@ -123,7 +136,6 @@ function exportQuotes() {
   link.download = "quotes.json";
   link.click();
   URL.revokeObjectURL(url);
-  console.log(url);
 }
 
 // ✅ Import from JSON file
@@ -136,6 +148,55 @@ function importFromJsonFile(event) {
     populateCategories();
     showRandomQuotes();
     alert("Quotes imported successfully!");
+    syncToServer(); // push imported to server
   };
   fileReader.readAsText(event.target.files[0]);
+}
+
+/* --------------------
+   SERVER SYNC SECTION
+-------------------- */
+
+// Fake server URL (use JSONPlaceholder or your own API later)
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
+// ✅ Push local quotes to "server"
+async function syncToServer() {
+  try {
+    await fetch(SERVER_URL, {
+      method: "POST",
+      body: JSON.stringify({ quotes }),
+      headers: { "Content-Type": "application/json" }
+    });
+    console.log("✅ Local quotes synced to server");
+  } catch (error) {
+    console.error("❌ Sync to server failed:", error);
+  }
+}
+
+// ✅ Fetch quotes from "server"
+async function fetchFromServer() {
+  try {
+    const res = await fetch(SERVER_URL);
+    const serverData = await res.json();
+
+    // Simulate server response structure
+    const serverQuotes = serverData[0]?.quotes || [];
+
+    if (serverQuotes.length > quotes.length) {
+      // Server takes precedence
+      quotes = serverQuotes;
+      localStorage.setItem("quotes", JSON.stringify(quotes));
+      populateCategories();
+      showRandomQuotes();
+      notifyUser("Quotes updated from server");
+    }
+  } catch (error) {
+    console.error("❌ Fetch from server failed:", error);
+  }
+}
+
+// ✅ Simple UI notification
+function notifyUser(message) {
+  alert(message); // simple way, can replace with toast/notification UI
 }
