@@ -175,7 +175,7 @@ async function syncToServer() {
 }
 
 // ✅ Fetch quotes from "server"
-async function fetchQoutesFromServer() {
+async function fetchQuotesFromServer() {
   try {
     const res = await fetch(SERVER_URL);
     const serverData = await res.json();
