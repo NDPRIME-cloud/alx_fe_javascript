@@ -83,6 +83,7 @@ function addQuote() {
   // Push to server simulation
   syncToServer();
 }
+syncQuotes
 
 // ✅ Populate category dropdown dynamically
 function populateCategories() {
